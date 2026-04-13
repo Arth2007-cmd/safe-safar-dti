@@ -55,7 +55,7 @@ const LoadingSkeleton = () => (
 
 export const MainApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'search' | 'map' | 'routes' | 'fares'>('search');
-  const [activeSection, setActiveSection] = useState<'dashboard' | 'book' | 'livemaps' | 'gamehub' | 'ai' | 'emergency' | 'impact' | 'profile'>('dashboard');
+  const [activeSection, setActiveSection] = useState<'dashboard' | 'book' | 'livemaps' | 'gamehub' | 'ai' | 'emergency' | 'impact' | 'profile' | 'about'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -326,6 +326,7 @@ export const MainApp: React.FC = () => {
     { key: 'ai' as const, label: 'AI Features', icon: Brain },
     { key: 'emergency' as const, label: 'Emergency', icon: Shield },
     { key: 'impact' as const, label: 'Impact', icon: LineChart },
+    { key: 'about' as const, label: 'About', icon: UserCircle },
     { key: 'profile' as const, label: 'Profile', icon: UserCircle },
   ];
 
@@ -576,6 +577,16 @@ export const MainApp: React.FC = () => {
                         <>
                           <p className="font-semibold mb-2">Impact</p>
                           <p className="text-sm text-white/60">Track your carbon savings and eco-impact with each public transit journey.</p>
+                        </>
+                      )}
+                      {activeSection === 'about' && (
+                        <>
+                          <p className="font-semibold mb-2">About Us</p>
+                          <p className="text-sm text-white/60">
+                            SafeSafar is focused on making bus travel safer, smarter and easier with live tracking, route insights and
+                            commuter-first features.
+                          </p>
+                          <p className="text-sm text-blue-300 mt-2">Created by Arth Agrawal.</p>
                         </>
                       )}
                     </CardContent>
@@ -866,6 +877,26 @@ export const MainApp: React.FC = () => {
                       </motion.div>
                     ))}
                   </div>
+                </section>
+
+                <section>
+                  <Card className="bg-[#0b162b] border-blue-500/20">
+                    <CardContent className="p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-base font-semibold">About Us</h2>
+                        <Badge variant="outline" className="border-blue-400/40 text-blue-200">
+                          SafeSafar Team
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-white/75">
+                        SafeSafar is focused on making bus travel safer, smarter and easier with live tracking, route insights and
+                        commuter-first features.
+                      </p>
+                      <p className="text-sm text-white">
+                        Created by <span className="font-semibold text-blue-300">Arth Agrawal</span>.
+                      </p>
+                    </CardContent>
+                  </Card>
                 </section>
               </motion.div>
             )}
