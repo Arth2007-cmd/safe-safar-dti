@@ -1,0 +1,647 @@
+/**
+ * =====================================
+ *         SAFESAFAR DESIGN SYSTEM
+ * =====================================
+ *
+ * Project: SafeSafar - Public Transport Tracking
+ * Type: Urban Mobility Application
+ *
+ * DESIGN PHILOSOPHY
+ * -----------------
+ * Core Principle: Trust through clarity - making public transport predictable
+ * Design Style: Modern Transit - Clean, reliable, and accessible
+ * Emotion Goal: Confidence and ease in daily commuting
+ *
+ * COLOR SYSTEM (HSL FORMAT)
+ * -------------
+ * Primary: 217 91% 24% - Deep Blue (#1A365D) - Trust and reliability
+ * Secondary: 45 100% 51% - Amber (#FFC107) - Attention and warmth
+ * Accent: 178 100% 27% - Teal (#00838F) - Movement and progress
+ * Success: 143 85% 35% - Green - Safe arrival
+ * Warning: 25 95% 55% - Orange - Delays and cautions
+ * Danger: 0 85% 55% - Red - Emergency alerts
+ *
+ * TYPOGRAPHY
+ * ----------
+ * Display: Inter - Clear headlines and navigation
+ * Body: System fonts - Maximum readability on mobile
+ *
+ * INTERACTIONS
+ * ------------
+ * Transitions: 250ms ease-out - Smooth but decisive
+ * States: High contrast for accessibility
+ * Touch Targets: Minimum 44px for easy mobile interaction
+ * ====================================
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 217 91% 24%;
+    --card: 0 0% 100%;
+    --card-foreground: 217 91% 24%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 91% 24%;
+    --primary: 217 91% 24%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 45 100% 51%;
+    --secondary-foreground: 217 91% 24%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 217 25% 45%;
+    --accent: 178 100% 27%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 32% 92%;
+    --input: 217 32% 92%;
+    --ring: 217 91% 24%;
+    --radius: 0.75rem;
+    --success: 143 85% 35%;
+    --warning: 25 95% 55%;
+    --transit-blue: 217 91% 24%;
+    --transit-amber: 45 100% 51%;
+    --transit-teal: 178 100% 27%;
+  }
+
+  .dark {
+    --background: 217 91% 8%;
+    --foreground: 0 0% 98%;
+    --card: 217 91% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 217 91% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 45 100% 51%;
+    --primary-foreground: 217 91% 24%;
+    --secondary: 217 25% 25%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 217 25% 20%;
+    --muted-foreground: 217 25% 65%;
+    --accent: 178 100% 27%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 25% 25%;
+    --input: 217 25% 25%;
+    --ring: 45 100% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  /* ===== CORE COMPONENT STYLES ===== */
+  .transit-button {
+    @apply h-12 px-6 rounded-xl font-medium transition-all duration-300 ease-out;
+    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+    @apply active:scale-95 hover:shadow-lg hover:-translate-y-0.5;
+    min-width: 44px;
+  }
+
+  .transit-card {
+    @apply bg-card border border-border rounded-xl shadow-sm;
+    @apply transition-all duration-300 ease-out;
+    will-change: transform, box-shadow;
+  }
+
+  .transit-card:hover {
+    box-shadow: 0 8px 30px rgba(26, 54, 93, 0.1), 0 2px 8px rgba(26, 54, 93, 0.06);
+    transform: translateY(-2px);
+  }
+
+  .transit-input {
+    @apply h-12 px-4 rounded-xl border border-input bg-background;
+    @apply focus:border-primary focus:ring-2 focus:ring-primary/20;
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .map-overlay {
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(to bottom,
+      hsl(var(--background)) 0%,
+      transparent 10%,
+      transparent 90%,
+      hsl(var(--background)) 100%);
+  }
+
+  .status-live {
+    @apply text-green-600 bg-green-50 border-green-200;
+  }
+
+  .status-delayed {
+    @apply text-orange-600 bg-orange-50 border-orange-200;
+  }
+
+  .status-cancelled {
+    @apply text-red-600 bg-red-50 border-red-200;
+  }
+
+  /* ===== SPLASH SCREEN ===== */
+  .splash-screen {
+    @apply fixed inset-0 flex items-center justify-center z-50;
+    background: linear-gradient(135deg, 
+      hsl(217, 91%, 20%) 0%, 
+      hsl(217, 91%, 28%) 30%, 
+      hsl(178, 100%, 25%) 70%, 
+      hsl(217, 91%, 22%) 100%);
+    background-size: 400% 400%;
+    animation: auroraGradient 6s ease infinite;
+  }
+
+  .splash-logo {
+    @apply text-white text-4xl font-bold;
+    animation: logoEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+               logoPulse 2s ease-in-out 1.5s infinite,
+               logoGlow 3s ease-in-out 1s infinite;
+  }
+
+  .splash-tagline {
+    @apply text-white/80 text-lg mt-4;
+    animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+  }
+
+  /* ===== APP ENTRANCE ===== */
+  .app-enter {
+    animation: appSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* ===== AUTH MODAL ===== */
+  .login-overlay {
+    @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-40;
+    animation: overlayFadeIn 0.3s ease-out forwards;
+  }
+
+  .login-panel {
+    @apply fixed inset-x-0 bottom-0 bg-background rounded-t-3xl shadow-2xl z-50;
+    animation: panelSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    max-height: 90vh;
+  }
+
+  /* ===== WELCOME SCREEN ===== */
+  .welcome-content {
+    animation: contentFadeIn 0.8s ease-out 0.3s both;
+  }
+
+  .feature-item {
+    @apply transition-all duration-300 ease-out;
+    animation: itemSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .feature-item:nth-child(1) { animation-delay: 0.1s; }
+  .feature-item:nth-child(2) { animation-delay: 0.25s; }
+  .feature-item:nth-child(3) { animation-delay: 0.4s; }
+
+  /* ===== ANTIGRAVITY ANIMATIONS ===== */
+  .pulse-dot {
+    animation: pulseDot 1.5s ease-in-out infinite;
+  }
+
+  .floating-element {
+    animation: antigravityFloat 4s ease-in-out infinite;
+  }
+
+  .bus-move {
+    animation: busAnimation 3s ease-in-out infinite;
+  }
+
+  /* Antigravity levitate - objects slowly rise and fall */
+  .antigravity-levitate {
+    animation: antigravityLevitate 5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  }
+
+  /* Magnetic hover - elements gently attract to cursor area */
+  .magnetic-hover {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .magnetic-hover:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  /* Orbiting particles around elements */
+  .orbit-ring {
+    position: relative;
+  }
+
+  .orbit-ring::before,
+  .orbit-ring::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    animation: orbitParticle 6s linear infinite;
+  }
+
+  .orbit-ring::before {
+    width: 6px; height: 6px;
+    background: hsl(var(--accent));
+    top: -3px; left: 50%;
+    box-shadow: 0 0 10px hsl(var(--accent) / 0.5);
+  }
+
+  .orbit-ring::after {
+    width: 4px; height: 4px;
+    background: hsl(var(--secondary));
+    bottom: -2px; right: 30%;
+    animation-delay: -3s;
+    box-shadow: 0 0 8px hsl(var(--secondary) / 0.5);
+  }
+
+  /* Ripple effect on tap */
+  .ripple-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-effect::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+      hsl(var(--primary) / 0.15) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .ripple-effect:active::after {
+    opacity: 1;
+  }
+
+  /* Glowing border pulse */
+  .glow-border {
+    position: relative;
+  }
+
+  .glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, 
+      hsl(var(--primary)), 
+      hsl(var(--accent)), 
+      hsl(var(--secondary)),
+      hsl(var(--primary)));
+    background-size: 300% 300%;
+    z-index: -1;
+    animation: glowRotate 4s ease infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .glow-border:hover::before {
+    opacity: 0.7;
+  }
+
+  /* Stagger animation for list items */
+  .stagger-item {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggerReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .stagger-item:nth-child(1) { animation-delay: 0.05s; }
+  .stagger-item:nth-child(2) { animation-delay: 0.1s; }
+  .stagger-item:nth-child(3) { animation-delay: 0.15s; }
+  .stagger-item:nth-child(4) { animation-delay: 0.2s; }
+  .stagger-item:nth-child(5) { animation-delay: 0.25s; }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    background: linear-gradient(90deg, 
+      hsl(var(--muted)) 0%, 
+      hsl(var(--muted-foreground) / 0.1) 50%, 
+      hsl(var(--muted)) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* Glass card with depth */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Neon glow text */
+  .neon-text {
+    text-shadow: 
+      0 0 7px hsl(var(--accent) / 0.5),
+      0 0 10px hsl(var(--accent) / 0.3),
+      0 0 21px hsl(var(--accent) / 0.2);
+  }
+
+  /* Breathing animation for live indicators */
+  .breathing {
+    animation: breathing 3s ease-in-out infinite;
+  }
+
+  /* Smooth parallax layers */
+  .parallax-slow { animation: parallaxDrift 8s ease-in-out infinite; }
+  .parallax-medium { animation: parallaxDrift 5s ease-in-out infinite reverse; }
+  .parallax-fast { animation: parallaxDrift 3s ease-in-out infinite; }
+
+  /* Bus route line animation */
+  .route-line {
+    background: linear-gradient(90deg, 
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 50%,
+      hsl(var(--primary)) 100%);
+    background-size: 200% auto;
+    animation: routeFlow 3s linear infinite;
+  }
+
+  /* Particle burst on click */
+  .particle-burst {
+    position: relative;
+  }
+
+  .particle-burst::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 
+      inset 0 0 0 0 hsl(var(--primary) / 0.3);
+    transition: box-shadow 0.4s ease;
+  }
+
+  .particle-burst:active::before {
+    box-shadow: 
+      inset 0 0 20px 10px hsl(var(--primary) / 0.1);
+  }
+}
+
+/* ===== KEYFRAME ANIMATIONS ===== */
+
+@keyframes auroraGradient {
+  0%, 100% { background-position: 0% 50%; }
+  25% { background-position: 100% 0%; }
+  50% { background-position: 100% 100%; }
+  75% { background-position: 0% 100%; }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes logoEntry {
+  from {
+    opacity: 0;
+    transform: scale(0.3) translateY(50px) rotate(-10deg);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+  50% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.4)); }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes appSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes panelSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes itemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+@keyframes antigravityFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(-2deg);
+  }
+}
+
+@keyframes antigravityLevitate {
+  0% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+  }
+  30% {
+    transform: translateY(-20px) scale(1.01);
+    filter: drop-shadow(0 25px 20px rgba(0,0,0,0.08));
+  }
+  60% {
+    transform: translateY(-15px) scale(1.005);
+    filter: drop-shadow(0 20px 15px rgba(0,0,0,0.09));
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+  }
+}
+
+@keyframes busAnimation {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+  }
+  30% {
+    transform: translateX(12px) scale(1.05);
+  }
+  60% {
+    transform: translateX(-6px) scale(0.98);
+  }
+}
+
+@keyframes orbitParticle {
+  from { transform: rotate(0deg) translateX(30px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(30px) rotate(-360deg); }
+}
+
+@keyframes glowRotate {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes staggerReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes breathing {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+}
+
+@keyframes parallaxDrift {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(10px, -15px) rotate(3deg);
+  }
+  66% {
+    transform: translate(-8px, -8px) rotate(-2deg);
+  }
+}
+
+@keyframes routeFlow {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes rippleExpand {
+  from {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes particleRise {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-60px) scale(0);
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
